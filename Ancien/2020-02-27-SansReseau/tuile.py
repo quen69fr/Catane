@@ -1,0 +1,52 @@
+# coding: utf-8
+
+from outils import *
+
+class Tuile():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.x_affiche = int(self.x - largeur_tuile / 2)
+        self.ressource = 0
+        self.image = None
+        self.numero = 0
+        self.listeSommets = []
+        self.listeAretes = []
+        self.voleur = False
+
+    # ----------------------------------------------------
+    def affiche(self):
+        SCREEN.blit(self.image, (self.x_affiche, self.y))
+        if self.ressource != RESSOURCE_DESERT:
+            self.affiche_numero()
+        if self.voleur == True:
+            SCREEN.blit(IMAGE_VOLEUR, (self.x - LARGEUR_IMAGE_VOLEUR / 2, self.y + hauteur_tuile / 2 - HAUTEUR_IMAGE_VOLEUR / 2))
+
+    # ----------------------------------------------------
+    def affiche_numero(self):
+        rayon_numero = 20
+        pygame.draw.circle(SCREEN, BLANC, (self.x, int(self.y + hauteur_tuile / 2)), rayon_numero, 0)
+        pygame.gfxdraw.aacircle(SCREEN, self.x, int(self.y + hauteur_tuile / 2), rayon_numero, NOIR)
+        pygame.gfxdraw.aacircle(SCREEN, self.x, int(self.y + hauteur_tuile / 2), rayon_numero-2, NOIR)
+        c = NOIR
+        t = 35
+        if self.numero == 6 or self.numero == 8:
+            c = ROUGE
+            t += 10
+        elif self.numero == 5 or self.numero == 9:
+            t += 10
+        elif self.numero == 11 or self.numero == 3:
+            t -= 5
+        elif self.numero == 12 or self.numero == 2:
+            t -= 10
+
+        affiche_texte(str(self.numero), self.x, int(self.y + hauteur_tuile / 2 + 2), None, t, c, centrer=True)
+
+    # ----------------------------------------------------
+    def clic(self, x_souris, y_souris):
+        xc = self.x
+        yc = self.y + hauteur_tuile / 2
+        d = math.sqrt((x_souris - xc)**2 + (y_souris - yc)**2)
+        if d < largeur_tuile / 2:
+            return True
+        return False
